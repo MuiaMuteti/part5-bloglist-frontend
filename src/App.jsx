@@ -15,9 +15,15 @@ const App = () => {
   const [url, setURL] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    const fetchBlogsAsync = async () => {
+      try {
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)
+      } catch (error) {
+        console.log('an error occured while fetching data:', error.message)
+      }
+    }
+    fetchBlogsAsync()
   }, [])
 
   useEffect(() => {
