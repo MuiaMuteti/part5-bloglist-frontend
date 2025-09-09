@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import AddBlogForm from './components/AddBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +14,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setURL] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     const fetchBlogsAsync = async () => {
@@ -49,6 +51,13 @@ const App = () => {
       setPassword('')
     } catch(error) {
       console.log('invalid credentials', error.message)
+      setNotification({
+        type: 'error',
+        message: 'Invalid username or password'
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
@@ -68,6 +77,13 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setURL('')
+      setNotification({
+        type: 'success',
+        message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (error) {
       console.log('unable to add new blog', error.message)
     }
@@ -97,6 +113,7 @@ const App = () => {
         handleLogin={handleLogin}
         handleUsernameChange={handleUsernameChange}
         handlePasswordChange={handlePasswordChange}
+        notification={notification}
       />
     )
   }
@@ -104,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification notification={notification} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       <AddBlogForm
         title={title}
