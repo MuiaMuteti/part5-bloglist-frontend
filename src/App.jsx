@@ -106,6 +106,22 @@ const App = () => {
     }
   }
 
+  const removeBlog = async blog => {
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      setNotification({
+        type: 'success',
+        message: `blog ${blog.title} by ${blog.author} removed`
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (error) {
+      console.log('unable to delete blog', error.message)
+    }
+  }
+
   const handleUsernameChange = event => {
     setUsername(event.target.value)
   }
@@ -141,8 +157,16 @@ const App = () => {
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {addBlogForm()}
       {/* display blogs in descending order */}
-      {blogs.toSorted((a ,b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} likeBlog={() => handleBlogLiking(blog.id)} />
+      {blogs
+        .toSorted((a ,b) => b.likes - a.likes)
+        .map(blog =>
+          <Blog 
+            key={blog.id}
+            blog={blog}
+            user={user}
+            likeBlog={() => handleBlogLiking(blog.id)}
+            removeBlog={removeBlog}
+          />
       )}
     </div>
   )
