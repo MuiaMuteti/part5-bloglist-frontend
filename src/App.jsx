@@ -88,6 +88,24 @@ const App = () => {
     }
   }
 
+  const handleBlogLiking = async blogId => {
+    const blog = blogs.find(b => b.id === blogId)
+    console.log(blog)
+    const updatedBlog = {
+      ...blog,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+    }
+    console.log(updatedBlog)
+    try {
+      const returnedBlog = await blogService.update(blogId, updatedBlog)
+      console.log(returnedBlog)
+      setBlogs(blogs.map(b => b.id === blogId? returnedBlog : b))
+    } catch(error) {
+      console.log('blog was already removed from server:', error.message)
+    }
+  }
+
   const handleUsernameChange = event => {
     setUsername(event.target.value)
   }
@@ -123,7 +141,7 @@ const App = () => {
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {addBlogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={() => handleBlogLiking(blog.id)} />
       )}
     </div>
   )
