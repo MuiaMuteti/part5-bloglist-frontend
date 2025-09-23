@@ -140,7 +140,8 @@ const App = () => {
       <Notification notification={notification} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {addBlogForm()}
-      {blogs.map(blog =>
+      {/* display blogs in descending order */}
+      {blogs.toSorted((a ,b) => b.likes - a.likes).map(blog =>
         <Blog key={blog.id} blog={blog} likeBlog={() => handleBlogLiking(blog.id)} />
       )}
     </div>
