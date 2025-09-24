@@ -70,12 +70,12 @@ const App = () => {
     console.log('adding', newBlog)
 
     addBlogFormRef.current.toggleVisibility()
-    
+
     try {
       const returnedBlog = await blogService.create(newBlog)
       console.log(returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
-      
+
       setNotification({
         type: 'success',
         message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
@@ -160,14 +160,14 @@ const App = () => {
       {blogs
         .toSorted((a ,b) => b.likes - a.likes)
         .map(blog =>
-          <Blog 
+          <Blog
             key={blog.id}
             blog={blog}
             user={user}
             likeBlog={() => handleBlogLiking(blog.id)}
             removeBlog={removeBlog}
           />
-      )}
+        )}
     </div>
   )
 }
